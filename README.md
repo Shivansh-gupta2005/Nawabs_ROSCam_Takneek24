@@ -59,38 +59,7 @@ The TurtleBot is programmed to follow the detected edges of the platform. Using 
     ```bash
     git clone https://github.com/Shivansh_gupta2005/Takneek_Nawabs.git
     ```
-2. Install the required dependencies:
-    ```bash
-    pip install -r requirements.txt
-    ```
 
-3. Set up your TurtleBot and ZED camera with ROS. Ensure that the ZED camera is publishing the RGB and depth data.
-
-4. Launch the edge detection and depth calculation node:
-    ```bash
-    roslaunch yourpackage edge_detection.launch
-    ```
-
-### Running the Tasks
-
-1. **Edge Detection**:
-    ```bash
-    rosrun yourpackage edge_detection.py
-    ```
-
-2. **Center Detection**:
-    ```bash
-    rosrun yourpackage center_detection.py
-    ```
-
-3. **Depth Calculation**:
-    ```bash
-    rosrun yourpackage depth_calculation.py
-    ```
-
-4. **TurtleBot Following Edges**:
-    ```bash
-    rosrun yourpackage turtlebot_edge_follow.py
     ```
 
 ## Contributing
