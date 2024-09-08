@@ -48,7 +48,7 @@ The TurtleBot is programmed to follow the detected edges of the platform. Using 
 ### Prerequisites
 
 - **ROS Noetic** (or compatible ROS version)
-- **ZED SDK** for depth calculation and RGBD image capture
+
 - **TurtleBot3** (or a similar robot for testing the edge-following behavior)
 - **Python 3** (for script execution)
 - **OpenCV** (for image processing)
@@ -62,9 +62,14 @@ The TurtleBot is programmed to follow the detected edges of the platform. Using 
 
     ```
 
-## Contributing
+## Contributors
 
-Contributions are welcome! Please submit a pull request or open an issue if you encounter any bugs or have suggestions for improvements.
+Shivansh Gupta 230976
+Rishabh Chandrakar 230856
+Rattandeep SIngh PUar 240854
+Pradyumn Vikram 240759
+
+
 
 ## License
 
