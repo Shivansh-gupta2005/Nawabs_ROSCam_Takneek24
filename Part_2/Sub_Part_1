@@ -1,0 +1,89 @@
+import rospy
+from turtlesim.msg import Pose
+from time import sleep
+from geometry_msgs.msg import Twist
+from math import sqrt
+from cv_ros_inter.msg import camros_data
+# Global variables
+waypoint_list = [] # A list of waypoints (you need to initialize this with your waypoints)
+#def msg_callback(msg):
+ # rospy.loginfo(msg)
+msg=[0,0,1,0,2,1,1,1]
+for i in range(4):
+ x,y=msg[i*2],msg[i*2+1]
+ waypoint_list.append([x,y])
+rospy.loginfo(waypoint_list)
+current_waypoint_index = 1
+waypoint_g = Pose() # Current waypoint
+current_pose_g = Pose() # Current position
+cmd = Twist() # current velocity
+# Function to set destination (send waypoint)
+def set_destination(x, y,z):
+ global waypoint_g
+ global cmd
+ global waypoint_list
+ global current_pose_g
+ waypoint_g.pose.position.x = x
+ waypoint_g.pose.position.y = y
+ waypoint_g.pose.position.z = z
+ vx = waypoint_g.pose.position.x-current_pose_g.x
+ vy = waypoint_g.pose.position.y-current_pose_g.y
+ cos = vx/((vy*vy)+(vx*vx))
+ sin = vy/((vy*vy)+(vx*vx))
+ speed = 5
+ cmd.linear.x = speed*cos
+ cmd.linear.y = speed*sin
+ pub.publish(cmd)
+ #local_pos_pub.publish(waypoint_g)
+# Function to stop (to be implemented based on your project)
+def stop():
+ global cmd
+ rospy.loginfo("Turtle Stopped")
+ cmd.linear.x = 0
+ cmd.linear.y = 0
+ pub.publish(cmd)
+# Function to check if waypoint is reached
+def check_waypoint_reached(pos_tolerance=0.3):
+ delta_x = abs(waypoint_g.pose.position.x - current_pose_g.pose.position.x)
+ delta_y = abs(waypoint_g.pose.position.y - current_pose_g.pose.position.y)
+ d_mag = sqrt(delta_x**2 + delta_y**2)
+ if d_mag < pos_tolerance:
+ return True
+ else:
+ return False
+# Main function
+def navigate_waypoints():
+ global current_waypoint_index
+ rate = rospy.Rate(2.0) # 2 Hz
+ while not rospy.is_shutdown():
+ rospy.spin()
+ rate.sleep()
+ if check_waypoint_reached(0.1):
+ if current_waypoint_index < len(waypoint_list):
+ next_wp = waypoint_list[current_waypoint_index]
+ set_destination(next_wp[0], next_wp[1], 0)
+ current_waypoint_index += 1
+ else:
+ stop() # Land after all waypoints are reached
+ break
+def pose_callback(msg):
+ current_pose_g = msg
+if __name__ == '__main__':
+ rospy.init_node('waypoint_navigator')
+ waypoint_list = []
+ msg=[0,0,1,0,2,1,1,1]
+ for i in range(4):
+ x,y=msg[i*2],msg[i*2+1]
+ waypoint_list.append([x,y])
+ rospy.loginfo(waypoint_list)
+ current_waypoint_index = 0
+ waypoint_g = Pose() # Current waypoint
+ current_pose_g = Pose() # Current position
+ cmd = Twist()
+ rate = rospy.Rate(3)
+ sub1 = rospy.Subscriber("/turtle1/pose",Pose,callback=pose_callback)
+ #sub = rospy.Subscriber("camros_depth",camros_data,callback=msg_callback)
+ pub = rospy.Publisher("/turtle1/cmd_vel", Twist, queue_size=10)
+ rospy.loginfo("[INFO] Initiated")
+ navigate_waypoints()
+ rospy.spin()
